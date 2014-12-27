@@ -9,7 +9,7 @@ private.gamestates = {
 
 function public:load()
     print("Hello Server")
-    hump.gamestate.push(private.gamestates.serverlobby)
+    hump.gamestate.push(self.gamestates.serverlobby)
 end
 
 function public:update(DT)        
