@@ -1,13 +1,10 @@
-local IS_SERVER = false
+IS_SERVER = false
 
 for key, value in pairs(arg) do
     if value:lower() == "-server" then
         IS_SERVER = true
-    end
-    print(key, value)
+    end    
 end
-
-print(IS_SERVER)
 
 function love.conf(t)
     t.identity = nil                   -- The name of the save directory (string)
