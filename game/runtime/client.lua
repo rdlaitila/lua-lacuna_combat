@@ -52,7 +52,12 @@ function public:mousepressed(X, Y, BUTTON)
     hump.gamestate.mousepressed(X, Y, BUTTON)
 end
 
-
+--
+-- Mousereleased callback
+--
+function public:mousereleased(X, Y, BUTTON)
+    hump.gamestate.mousereleased(X, Y, BUTTON)
+end
 
 -- 
 -- Focus callback
