@@ -1,16 +1,24 @@
 --
+-- Live debug console
+--
+require("lib.lovedebug.lovedebug")
+
+--
 -- Called upon love2d startup, after boostrap & config
 --
-function love.load()
+function love.load()    
     -- Require upperclass dependency
     upperclass = require('lib.upperclass.upperclass')
+    
+    -- Require enet
+    require('enet')
     
     -- Load HUMP libraries
     hump = {}
     hump.gamestate = require('lib.hump.gamestate')
     
     -- Load appropriate game runtime
-    if IS_SERVER == true then
+    if ARGS["SERVER"] == true then
         runtime = require('game.runtime.server')        
     else
         runtime = require('game.runtime.client')
@@ -72,4 +80,13 @@ end
 --
 function love.quit()
     runtime:quit()
+end
+
+--
+-- Generic log function
+--
+function log(FILE, MESSAGE)
+    local file = love.filesystem.getSaveDirectory().."/"..FILE
+    success = love.filesystem.write( file, tostring(MESSAGE))
+    print(success)
 end

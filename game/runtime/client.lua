@@ -3,6 +3,21 @@
 --
 local ClientRuntime = upperclass:define('ClientRuntime')
 
+local host = enet.host_create()
+local server = host:connect("127.0.0.1:6789")
+
+--
+-- Holds our client enet host
+--
+local enethost = enet.host_create()
+private.enethost = enethost
+
+--
+-- Holds our client enet server
+-- wet setup this var during load
+--
+private.enetserver = enethost:connect("127.0.0.1:6000")
+
 --
 -- Holds our client states
 --
@@ -13,15 +28,28 @@ private.gamestates = {
 --
 -- Load callback
 --
-function public:load()
+function public:load()    
     hump.gamestate.push(self.gamestates.clientmenu)
 end
 
 --
 -- Update callback
 --
-function public:update(DT)
-    hump.gamestate.update(DT)
+function public:update(DT)   
+    local event = host:service()
+    if event ~= nil then
+        if event.type == "receive" then
+            print("Got message: ", event.data, event.peer)    
+        elseif event.type == "connect" then
+            print(event.peer .. " connected.")
+            event.peer:send( "ping" )
+        elseif event.type == "disconnect" then
+            print(event.peer .. " disconnected.")
+        end
+        event = host:service()
+    end
+
+    hump.gamestate.update(DT)    
 end
 
 --

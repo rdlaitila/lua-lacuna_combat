@@ -1,8 +1,16 @@
-IS_SERVER = false
+--
+-- Hold our program argts
+--
+ARGS = {
+    SERVER = false,
+    SERVER_GFX = false
+}
 
 for key, value in pairs(arg) do
-    if value:lower() == "-server" then
-        IS_SERVER = true
+    if value:lower() == "-s" or value:lower() == "--server" then
+        ARGS["SERVER"] = true
+    elseif value:lower() == "-sg" or value:lower() == "--server-gfx" then
+        ARGS["SERVER_GFX"] = true
     end    
 end
 
@@ -39,15 +47,15 @@ function love.conf(t)
     t.modules.thread = true            -- Enable the thread module (boolean)
     
     -- Only load if client
-    if IS_SERVER == false then
+    if ARGS["SERVER"] == false then
         t.modules.audio = true             -- Enable the audio module (boolean)
         t.modules.graphics = true          -- Enable the graphics module (boolean)
         t.modules.sound = true             -- Enable the sound module (boolean)
         t.modules.window = true            -- Enable the window module (boolean)
     else
-        t.modules.audio = false             -- Enable the audio module (boolean)
-        t.modules.graphics = false          -- Enable the graphics module (boolean)
-        t.modules.sound = false             -- Enable the sound module (boolean)
-        t.modules.window = false            -- Enable the window module (boolean)
+        t.modules.audio = ARGS["SERVER_GFX"]             -- Enable the audio module (boolean)
+        t.modules.graphics = ARGS["SERVER_GFX"]          -- Enable the graphics module (boolean)
+        t.modules.sound = ARGS["SERVER_GFX"]             -- Enable the sound module (boolean)
+        t.modules.window = ARGS["SERVER_GFX"]            -- Enable the window module (boolean)
     end    
 end
