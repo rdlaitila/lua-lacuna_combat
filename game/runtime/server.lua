@@ -1,6 +1,6 @@
 local ServerRuntime = upperclass:define('ServerRuntime')
 
-local host = enet.host_create("localhost:6789")
+local host = enet.host_create("0.0.0.0:6789")
 
 --
 -- Holds our gamestates
