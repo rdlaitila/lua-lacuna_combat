@@ -1,7 +1,7 @@
 --
 -- Live debug console
 --
-require("lib.lovedebug.lovedebug")
+--require("lib.lovedebug.lovedebug")
 
 --
 -- Called upon love2d startup, after boostrap & config
