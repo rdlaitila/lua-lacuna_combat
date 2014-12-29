@@ -4,7 +4,7 @@
 local ClientRuntime = upperclass:define('ClientRuntime')
 
 local host = enet.host_create()
-local server = host:connect("127.0.0.1:6789")
+local server = host:connect("linus.reganlaitila.net:6789")
 
 --
 -- Holds our client enet host
