@@ -1,46 +1,75 @@
-local ClientMenu = {}
+--
+-- Define class
+--
+local ClientMenu = upperclass:define("ClientMenu")
 
-function ClientMenu:init()
+--
+-- Holds a reference to our runtime which we need for various sub-systems
+-- the runtime object is obtained through the enter() method
+--
+property : runtime {
+    {};
+    get='public';
+    set='private';
+}
+
+
+private.connectToServer = false
+private.connectToServerInput = ""
+
+function public:enter(RUNTIME)    
+    self.runtime = RUNTIME
+    
+    lure.load("lib/lure/tests/layout/block-layouts/index.html")
 end
 
-function ClientMenu:enter()
+function public:leave()
 end
 
-function ClientMenu:leave()
+function public:suspend()
 end
 
-function ClientMenu:resume()
+function public:resume()
 end
 
-function ClientMenu:update(DT)
+function public:update(DT)   
+    lure.update(DT)
 end
 
-function ClientMenu:draw()
-    love.graphics.print("Client Menu", 0, 0)
+function public:draw()
+    love.graphics.print("-=Client Menu=-", 0, 0)    
+    love.graphics.print("1.) Connect To Server", 0, 15)
+    lure.draw()
 end
 
-function ClientMenu:focus()
+function public:focus()
 end
 
-function ClientMenu:keypressed()    
+function public:keypressed(KEY, IS_REPEAT)    
+    if KEY == "1" then
+        self.runtime.gamestateManager:push(self.runtime.gamestates.clientlobby, self.runtime, "127.0.0.1", 6000)
+    end
 end
 
-function ClientMenu:keyreleased()
+function public:keyreleased()
 end
 
-function ClientMenu:mousepressed()
+function public:mousepressed()
 end
 
-function ClientMenu:mousereleased()
+function public:mousereleased()
 end
 
-function ClientMenu:joystickpressed()
+function public:joystickpressed()
 end
 
-function ClientMenu:joystickreleased()
+function public:joystickreleased()
 end
 
-function ClientMenu:quit()
+function public:quit()
 end
 
-return ClientMenu
+--
+-- Compile class
+--
+return upperclass:compile(ClientMenu)

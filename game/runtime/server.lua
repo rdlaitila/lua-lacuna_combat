@@ -1,6 +1,25 @@
+--
+-- Server Runtime Class
+--
 local ServerRuntime = upperclass:define('ServerRuntime')
 
-local host = enet.host_create("0.0.0.0:6789")
+--
+-- Holds our Network Manager
+--
+property : networkManager { 
+    require('game.classes.networkmanager')(); 
+    get='public'; 
+    set='private'
+}
+
+--
+-- Holds our Gamestate Manager
+--
+property : gamestateManager {
+    require('game.classes.gamestatemanager')(),
+    get='public',
+    set='private'
+}
 
 --
 -- Holds our gamestates
@@ -12,33 +31,23 @@ private.gamestates = {
 --
 -- Load callback
 --
-function public:load()      
-    hump.gamestate.push(self.gamestates.serverlobby)
+function public:load()          
+    self.gamestateManager:push(self.gamestates.serverlobby, self)    
 end
 
 --
 -- Update callback
 --
 function public:update(DT)    
-    local event = host:service()
-    if event ~= nil then
-        if event.type == "receive" then
-            print("Got message: ", event.data, event.peer)            
-        elseif event.type == "connect" then
-            print(event.peer .. " connected.")
-        elseif event.type == "disconnect" then
-            print(event.peer .. " disconnected.")
-        end
-        event = host:service()
-    end
-    hump.gamestate.update(DT)
+    self.networkManager:update(DT)
+    self.gamestateManager:update(DT)
 end
 
 --
 -- Draw callback
 --
 function public:draw()
-    hump.gamestate.draw()       
+    self.gamestateManager:draw()   
 end
 
 --
@@ -65,8 +74,7 @@ end
 --
 -- Mousereleased callback
 --
-function public:mousereleased(X, Y, BUTTON)
-    hump.gamestate.mousereleased(X, Y, BUTTON)
+function public:mousereleased(X, Y, BUTTON)    
 end
 
 -- 

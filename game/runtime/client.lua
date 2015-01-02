@@ -3,100 +3,94 @@
 --
 local ClientRuntime = upperclass:define('ClientRuntime')
 
-local host = enet.host_create()
-local server = host:connect("linus.reganlaitila.net:6789")
+--
+-- Holds our Network Manager
+--
+property : networkManager { 
+    require('game.classes.networkmanager')(); 
+    get='public'; 
+    set='private'
+}
 
 --
--- Holds our client enet host
+-- Holds our Gamestate Manager
 --
-local enethost = enet.host_create()
-private.enethost = enethost
-
---
--- Holds our client enet server
--- wet setup this var during load
---
-private.enetserver = enethost:connect("127.0.0.1:6000")
+property : gamestateManager {
+    require('game.classes.gamestatemanager')(),
+    get='public',
+    set='private'
+}
 
 --
 -- Holds our client states
 --
-private.gamestates = {
-    clientmenu = require('game.states.clientmenu')
+public.gamestates = {
+    clientmenu = require('game.states.clientmenu'),
+    clientlobby = require('game.states.clientlobby')
 }
 
 --
 -- Load callback
 --
-function public:load()    
-    hump.gamestate.push(self.gamestates.clientmenu)
+function public:load()        
+    self.gamestateManager:push(self.gamestates.clientmenu, self)
 end
 
 --
 -- Update callback
 --
-function public:update(DT)   
-    local event = host:service()
-    if event ~= nil then
-        if event.type == "receive" then
-            print("Got message: ", event.data, event.peer)    
-        elseif event.type == "connect" then
-            print(event.peer .. " connected.")
-            event.peer:send( "ping" )
-        elseif event.type == "disconnect" then
-            print(event.peer .. " disconnected.")
-        end
-        event = host:service()
-    end
-
-    hump.gamestate.update(DT)    
+function public:update(DT)       
+    self.networkManager:update(DT)
+    self.gamestateManager:update(DT)
 end
 
 --
 -- Draw callback
 --
-function public:draw()
-    hump.gamestate.draw()       
+function public:draw()    
+    self.gamestateManager:draw()
 end
 
 --
 -- Keypressed callback
 --
 function public:keypressed(KEY, IS_REPEAT)
-    hump.gamestate.keypressed(KEY, IS_REPEAT)
+    self.gamestateManager:keypressed(KEY, IS_REPEAT)
 end
 
 --
 -- Keyreleased callback
 --
 function public:keyreleased(KEY)
-    hump.gamestate.keyreleased(KEY)
+    self.gamestateManager:keyreleased(KEY)
 end
 
 --
 -- Mousepressed callback
 --
 function public:mousepressed(X, Y, BUTTON)
-    hump.gamestate.mousepressed(X, Y, BUTTON)
+    self.gamestateManager:mousepressed(X, Y, BUTTON)
 end
 
 --
 -- Mousereleased callback
 --
 function public:mousereleased(X, Y, BUTTON)
-    hump.gamestate.mousereleased(X, Y, BUTTON)
+    self.gamestateManager:mousereleased(X, Y, BUTTON)
 end
 
 -- 
 -- Focus callback
 --
 function public:focus(FOCUS)
+    self.gamestateManager:focus(FOCUS)
 end
 
 --
 -- Quick callback
 --
 function public:quit()
+    self.gamestateManager:quit()
 end
 
 --

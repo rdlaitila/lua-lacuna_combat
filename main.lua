@@ -10,12 +10,11 @@ function love.load()
     -- Require upperclass dependency
     upperclass = require('lib.upperclass.upperclass')
     
-    -- Require enet
-    require('enet')
-    
     -- Load HUMP libraries
-    hump = {}
-    hump.gamestate = require('lib.hump.gamestate')
+    hump = {}    
+    
+    -- Load LURE lib
+    require('lib.lure.lure')
     
     -- Load appropriate game runtime
     if ARGS["SERVER"] == true then
