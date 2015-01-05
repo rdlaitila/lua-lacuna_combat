@@ -1,7 +1,9 @@
+local GameState = require('game.classes.gamestate')
+
 --
 -- Define Class
 --
-local ClientLobby = upperclass:define("ClientLobby")
+local ClientLobby = upperclass:define("ClientLobby", GameState)
 
 --
 -- Holds a reference to our runtime which we need for various sub-systems
@@ -26,24 +28,12 @@ private.serverPort = 0
 --
 -- Gamtestate enter method
 --
-function public:enter(RUNTIME, SERVER_ADDRESS, SERVER_PORT)
+function public:enter(RUNTIME, SERVER_ADDRESS, SERVER_PORT)       
     self.runtime = RUNTIME
     self.serverAddress = SERVER_ADDRESS
     self.serverPort = SERVER_PORT
     
     self.runtime.networkManager:connect(self.serverAddress, self.serverPort)
-end
-
---
--- Gamestate update method
---
-function public:update(DT)
-end
-
---
--- Gamestate draw method
---
-function public:draw()
 end
 
 --

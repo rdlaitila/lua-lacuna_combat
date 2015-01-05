@@ -13,9 +13,6 @@ function love.load()
     -- Load HUMP libraries
     hump = {}    
     
-    -- Load LURE lib
-    require('lib.lure.lure')
-    
     -- Load appropriate game runtime
     if ARGS["SERVER"] == true then
         runtime = require('game.runtime.server')        

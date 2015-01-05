@@ -34,6 +34,7 @@ public.gamestates = {
 --
 function public:load()        
     self.gamestateManager:push(self.gamestates.clientmenu, self)
+    upperclass:dumpClassMembers(self.gamestateManager, 1)
 end
 
 --

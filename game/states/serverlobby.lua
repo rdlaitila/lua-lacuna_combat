@@ -1,7 +1,9 @@
+local GameState = require('game.classes.gamestate')
+
 --
 -- Define class
 --
-local ServerLobby = upperclass:define("ServerLobby")
+local ServerLobby = upperclass:define("ServerLobby", GameState)
 
 --
 -- Holds a reference to our runtime which we need for various sub-systems
