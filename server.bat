@@ -1,1 +1,0 @@
-"C:\Program Files\love\love.exe" C:\Users\user\Documents\GitHub\lua-lacuna_combat -server

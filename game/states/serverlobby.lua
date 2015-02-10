@@ -1,16 +1,16 @@
-local GameState = require('game.classes.gamestate')
+local game = require(select('1', ...):match(".-game%.")..'init')
 
 --
 -- Define class
 --
-local ServerLobby = upperclass:define("ServerLobby", GameState)
+local ServerLobby = game.lib.upperclass:define("ServerLobby", game.classes.Gamestate)
 
 --
 -- Holds a reference to our runtime which we need for various sub-systems
 -- the runtime object is obtained through the enter() method
 --
 property : runtime {
-    {};
+    nil;
     get='public';
     set='private';
 }
@@ -19,9 +19,10 @@ property : runtime {
 -- Holds the network manager callbacks registered during state enter() so they can 
 -- be unregistered if needed
 property : networkManagerCallbacks {
-    {onConnectCB = nil, onDisconnectCB = nil, onRecieveCB = nil},
-    get='public',
-    set='private'
+    nil;
+    get='public';
+    set='private';
+    type='any';
 }
 
 --
@@ -30,19 +31,26 @@ property : networkManagerCallbacks {
 property : debugLines { {} ; get='public' ; set='private' }
 
 --
+-- Class Constructor
+--
+function private:__construct()
+    self.networkManagerCallbacks = {onConnectCB = nil, onDisconnectCB = nil, onRecieveCB = nil}
+end
+
+--
 -- Gamestate enter callback
 --
 function public:enter(RUNTIME)
     table.insert(self.debugLines, "Server Lobby")
     self.runtime = RUNTIME
     
-    self.networkManagerCallbacks.onConnectCB = {self, "onNetworkConnect"}
+    self.networkManagerCallbacks.onConnectCB    = {self, "onNetworkConnect"}
     self.networkManagerCallbacks.onDisconnectCB = {self, "onNetworkDisconnect"}
-    self.networkManagerCallbacks.onRecieveCB = {self, "onNetworkRecieve"}
+    self.networkManagerCallbacks.onRecieveCB    = {self, "onNetworkRecieve"}
     
-    self.runtime.networkManager:registerCallback("connect", self.networkManagerCallbacks.onConnectCB)
-    self.runtime.networkManager:registerCallback("disconnect", self.networkManagerCallbacks.onDisconnectCB)
-    self.runtime.networkManager:registerCallback("recieve", self.networkManagerCallbacks.onRecieveCB)
+    self.runtime.networkManager:registerCallback("connect",     self.networkManagerCallbacks.onConnectCB)
+    self.runtime.networkManager:registerCallback("disconnect",  self.networkManagerCallbacks.onDisconnectCB)
+    self.runtime.networkManager:registerCallback("recieve",     self.networkManagerCallbacks.onRecieveCB)
     
     self.runtime.networkManager:serve("*", 6000, 16)
 end
@@ -72,4 +80,4 @@ end
 --
 -- Compile Class
 --
-return upperclass:compile(ServerLobby)
+return game.lib.upperclass:compile(ServerLobby)

@@ -1,46 +1,64 @@
+local game = require(select('1', ...):match(".-game%.")..'init')
+
 --
 -- Client runtime class
 --
-local ClientRuntime = upperclass:define('ClientRuntime')
+local ClientRuntime = game.lib.upperclass:define('ClientRuntime')
 
 --
 -- Holds our Network Manager
 --
 property : networkManager { 
-    require('game.classes.networkmanager')(); 
+    nil;
     get='public'; 
-    set='private'
+    set='private';
+    type='any'
 }
 
 --
 -- Holds our Gamestate Manager
 --
-property : gamestateManager {
-    require('game.classes.gamestatemanager')(),
-    get='public',
-    set='private'
+property : gamestateManager {   
+    nil;
+    get='public';
+    set='private';
+    type='any';
 }
 
 --
--- Holds our client states
+-- Holds our gamestate objects
 --
-public.gamestates = {
-    clientmenu = require('game.states.clientmenu'),
-    clientlobby = require('game.states.clientlobby')
+property : gamestates {
+    nil;
+    get='public';
+    set='private';
+    type='table';
 }
+
+--
+-- Class Constructor
+--
+function private:__construct()    
+    self.gamestates = {
+        clientMenu          = game.states.ClientMenu();
+        clientLobby         = game.states.ClientLobby();
+        clientShipBuilder   = game.states.ClientShipBuilder();
+    }
+    self.networkManager = game.classes.NetworkManager()    
+    self.gamestateManager = game.classes.GamestateManager()    
+end
 
 --
 -- Load callback
 --
-function public:load()        
-    self.gamestateManager:push(self.gamestates.clientmenu, self)
-    upperclass:dumpClassMembers(self.gamestateManager, 1)
+function public:load()    
+    self.gamestateManager:push(self.gamestates.clientMenu, self)        
 end
 
 --
 -- Update callback
 --
-function public:update(DT)       
+function public:update(DT)  
     self.networkManager:update(DT)
     self.gamestateManager:update(DT)
 end
@@ -97,4 +115,4 @@ end
 --
 -- Compile class
 --
-return upperclass:compile(ClientRuntime)
+return game.lib.upperclass:compile(ClientRuntime)

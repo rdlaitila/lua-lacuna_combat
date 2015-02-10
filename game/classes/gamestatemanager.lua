@@ -1,21 +1,34 @@
+local game = require(select('1', ...):match(".-game%.")..'init')
+
 --
 -- Define Class
 --
-local GamestateManager = upperclass:define("GamestateManager")
+local GamestateManager = game.lib.upperclass:define("GamestateManager")
 
 --
 -- Holds our state stack
 --
 property : stack {
-    {},
+    nil,
     get='public',
     set='private'
 }
 
 --
+-- Class Constructor
+--
+function private:__construct()
+    self.stack = {}
+end
+
+--
 -- Pushes a new gamestate to the stack
 --
 function public:push(GAMESTATE_OBJECT, ...)
+    if GAMESTATE_OBJECT == nil then
+        error("Cannot Push NIL Gamestate")
+    end
+    
     -- call suspend on previous stack gamestate, if exists
     if #self.stack > 0 then
         self.stack[#self.stack]:suspend()
@@ -107,5 +120,5 @@ end
 --
 -- Compile Class
 --
-return upperclass:compile(GamestateManager)
+return game.lib.upperclass:compile(GamestateManager)
 

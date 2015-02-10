@@ -1,13 +1,15 @@
+local game = require(select('1', ...):match(".-game%.")..'init')
+
 --
 -- Server Runtime Class
 --
-local ServerRuntime = upperclass:define('ServerRuntime')
+local ServerRuntime = game.lib.upperclass:define('ServerRuntime')
 
 --
 -- Holds our Network Manager
 --
 property : networkManager { 
-    require('game.classes.networkmanager')(); 
+    nil;
     get='public'; 
     set='private'
 }
@@ -16,7 +18,7 @@ property : networkManager {
 -- Holds our Gamestate Manager
 --
 property : gamestateManager {
-    require('game.classes.gamestatemanager')(),
+    nil;
     get='public',
     set='private'
 }
@@ -24,21 +26,37 @@ property : gamestateManager {
 --
 -- Holds our gamestates
 --
-private.gamestates = {
-    serverlobby = require('game.states.serverlobby')
+property : gamestates {
+    nil;
+    get='public';
+    set='private';
+    type='table';
 }
+
+--
+-- Class Constructor
+--
+function private:__construct()
+    game.lib.lovebird.port = 8001
+    self.gamestates = {
+        serverLobby = game.states.ServerLobby()
+    }
+    self.networkManager = game.classes.NetworkManager()
+    self.gamestateManager = game.classes.GamestateManager()
+end
 
 --
 -- Load callback
 --
-function public:load()          
-    self.gamestateManager:push(self.gamestates.serverlobby, self)    
+function public:load()
+    self.gamestateManager:push(self.gamestates.serverLobby, self)    
 end
 
 --
 -- Update callback
 --
-function public:update(DT)    
+function public:update(DT)  
+    game.lib.lovebird.update(DT)
     self.networkManager:update(DT)
     self.gamestateManager:update(DT)
 end
@@ -92,4 +110,4 @@ end
 --
 -- Compile class
 --
-return upperclass:compile(ServerRuntime)
+return game.lib.upperclass:compile(ServerRuntime)

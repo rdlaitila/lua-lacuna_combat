@@ -1,56 +1,79 @@
-require('enet')
+local game = require(select('1', ...):match(".-game%.")..'init')
 
 --
 -- Define class
 --
-local NetworkManager = upperclass:define("NetworkManager")
+local NetworkManager = game.lib.upperclass:define("NetworkManager")
 
 --
--- Holds our enet values
+-- Holds our enet host object
 --
-property : enet { {} ; get='public' ; set='private' }
+property : host {
+    nil;
+    get='public';
+    set='private';
+    type='any';
+}
+
+--
+-- Holds our enet server object
+--
+property : server {
+    nil;
+    get='public';
+    set='private';
+    type='any';
+}
 
 --
 -- Holds our event calbacks
 --
-property : callbacks { {
-    connect = {},
-    disconnect = {},
-    receive = {}
-} ; get='public' ; set='private' }
+property : callbacks { 
+    nil;
+    get='public'; 
+    set='private';
+}
 
 --
 -- Class Constructor
 --
 function private:__construct()
+    require('enet')
+    
+    self.callbacks = {
+        connect     = {};
+        disconnect  = {};
+        receive     = {};
+    }
 end
 
 --
 -- Creates a new Enet UDP server
 --
-function public:serve(ADDRESS, PORT, MAX_CLIENTS)
-    self.enet.host = enet.host_create(ADDRESS..":"..PORT, MAX_CLIENTS)
+function public:serve(ADDRESS, PORT, MAX_CLIENTS)    
+    self.host = enet.host_create(ADDRESS..":"..PORT, MAX_CLIENTS)    
 end
 
 --
 -- Connects to a Enet UDP server
 --
-function public:connect(ADDRESS, PORT)
-    self.enet.host = enet.host_create()
-    self.enet.server = self.enet.host:connect(ADDRESS..":"..PORT)
+function public:connect(ADDRESS, PORT)     
+    self.host = enet.host_create()
+    self.server = self.host:connect(ADDRESS..":"..PORT)
 end
 
 --
 -- Processes data
 --
-function public:update(DT)
-    -- Halt update if we have no host defined
-    if self.enet.host == nil then
-        return
-    end
+function public:update(DT)    
+    local netevent = nil
     
     -- Process network events and call registered callbacks
-    local netevent = self.enet.host:service()
+    if self.host ~= nil then
+        local netevent = self.host:service()
+    end
+    
+    -- Process netevent
     if netevent then
         local passargs = {netevent.data, netevent.peer}
         if netevent.type == "receive" then
@@ -119,4 +142,4 @@ end
 -- 
 -- Compile Class
 --
- return upperclass:compile(NetworkManager)
+ return game.lib.upperclass:compile(NetworkManager)

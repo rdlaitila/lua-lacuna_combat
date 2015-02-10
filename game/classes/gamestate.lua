@@ -1,7 +1,9 @@
+local game = require(select('1', ...):match(".-game%.")..'init')
+
 --
 -- Define Class
 --
-local GameState = upperclass:define("GameState")
+local Gamestate = game.lib.upperclass:define("Gamestate")
 
 function public:leave()
 end
@@ -16,6 +18,9 @@ function public:update(DT)
 end
 
 function public:draw()
+end
+
+function public:keypressed()
 end
 
 function public:keyreleased()
@@ -42,5 +47,5 @@ end
 --
 -- Compile Class
 --
-return upperclass:compile(GameState)
+return game.lib.upperclass:compile(Gamestate)
 

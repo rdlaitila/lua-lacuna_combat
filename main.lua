@@ -1,24 +1,21 @@
---
--- Live debug console
---
---require("lib.lovedebug.lovedebug")
+game      = require('game.init')
+runtime   = nil
 
 --
 -- Called upon love2d startup, after boostrap & config
 --
-function love.load()    
-    -- Require upperclass dependency
-    upperclass = require('lib.upperclass.upperclass')
+function love.load()  -- Load appropriate game runtime
+    game.lib.lovebird.wrapprint = true
     
-    -- Load HUMP libraries
-    hump = {}    
-    
-    -- Load appropriate game runtime
     if ARGS["SERVER"] == true then
-        runtime = require('game.runtime.server')        
+        print("Starting Lacuna Server")
+        runtime = game.runtime.Server()
+        game.lib.lovebird.port = 8001        
     else
-        runtime = require('game.runtime.client')
-    end
+        runtime = game.runtime.Client()
+        game.lib.lovebird.port = 8000        
+    end    
+    
     runtime:load()
 end
 
@@ -26,6 +23,7 @@ end
 -- Main Love2d update loop
 --
 function love.update(DT)
+    --game.lib.lovebird.update(DT)
     runtime:update(DT)
 end
 
@@ -33,7 +31,7 @@ end
 -- Main love2d draw loop
 --
 function love.draw()    
-    runtime:draw()
+    runtime:draw()    
 end
 
 --
@@ -76,13 +74,4 @@ end
 --
 function love.quit()
     runtime:quit()
-end
-
---
--- Generic log function
---
-function log(FILE, MESSAGE)
-    local file = love.filesystem.getSaveDirectory().."/"..FILE
-    success = love.filesystem.write( file, tostring(MESSAGE))
-    print(success)
 end
