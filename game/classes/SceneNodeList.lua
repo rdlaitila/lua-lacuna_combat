@@ -29,6 +29,8 @@ end
 function private:__index(KEY)
     if type(KEY) == 'number' then
         return self.nodes[KEY]
+    elseif KEY == 'length' then
+        return #self.nodes
     end
     
     return UPPERCLASS_DEFAULT_BEHAVIOR

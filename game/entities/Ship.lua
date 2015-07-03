@@ -102,6 +102,17 @@ function private:__construct(POSX, POSY)
 end
 
 --
+-- Draw
+--
+function public:draw()
+    self.ownerNode.camera:attach()
+    
+    love.graphics.circle("fill", self.principleGridPosition.x, self.principleGridPosition.y, 50)
+    
+    self.ownerNode.camera:detach()
+end
+
+--
 -- Adds a hull block to the ship
 --
 function public:addHullBlock(BLOCK, GRIDX, GRIDY)

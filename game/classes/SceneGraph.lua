@@ -29,12 +29,17 @@ property : camera {
 -- Class Constructor
 --
 function private:__construct()
+    -- Ensure we set this node's owner node to self
+    self.ownerNode = self
+    
     -- Setup world
     self.world = love.physics.newWorld()
     
     -- Setup Camera
     self.camera = game.lib.HumpCamera(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end
+
+
 
 --
 -- Compile Class

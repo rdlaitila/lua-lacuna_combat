@@ -36,11 +36,12 @@ game.runtime.Client   = (BASE_PATH..'runtime.Client')
 game.runtime.Server   = (BASE_PATH..'runtime.Server')
 
 -- Our game states
-game.states                     = game.lib.DynamicRequire()
-game.states.ClientLobby         = (BASE_PATH..'states.ClientLobby')
-game.states.ClientMenu          = (BASE_PATH..'states.ClientMenu')
-game.states.ClientShipBuilder   = (BASE_PATH..'states.ClientShipBuilder')
-game.states.ServerLobby         = (BASE_PATH..'states.ServerLobby')
+game.states                         = game.lib.DynamicRequire()
+game.states.ClientLobby             = (BASE_PATH..'states.ClientLobby')
+game.states.ClientMenu              = (BASE_PATH..'states.ClientMenu')
+game.states.ClientShipBuilder       = (BASE_PATH..'states.ClientShipBuilder')
+game.states.ClientShipPlayground    = (BASE_PATH..'states.ClientShipPlayground')
+game.states.ServerLobby             = (BASE_PATH..'states.ServerLobby')
 
 -- Return the game
 return game

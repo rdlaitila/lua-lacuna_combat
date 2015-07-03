@@ -6,16 +6,6 @@ local game = require(select('1', ...):match(".-game%.")..'init')
 local ClientShipBuilder = game.lib.upperclass:define("ClientShipBuilder", game.classes.Gamestate)
 
 --
--- Holds a reference to our runtime which we need for various sub-systems
--- the runtime object is obtained through the enter() method
---
-property : runtime {
-    nil;
-    get='public';
-    set='private';
-}
-
---
 -- Returns the space scene
 --
 property : scene {
@@ -33,7 +23,7 @@ function private:__construct()
     self.scene = game.classes.SceneGraph()
     
     -- Create a blank ship
-    local shipx, shipy = self.camera:worldCoords(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
+    local shipx, shipy = self.scene.camera:worldCoords(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
     local ship = game.entities.Ship(shipx, shipy)
     self.scene:appendChild(ship)
     
@@ -43,7 +33,7 @@ end
 -- Gamestate Enter
 --
 function public:enter(RUNTIME)    
-    self.runtime = RUNTIME
+    self:__constructparent(RUNTIME)
 end
 
 --
@@ -51,16 +41,16 @@ end
 --
 function public:update(DT)
     if love.keyboard.isDown("left") then
-        self.camera.x = self.camera.x - 150 * DT
+        self.scene.camera.x = self.scene.camera.x - 150 * DT
     end
     if love.keyboard.isDown("right") then
-        self.camera.x = self.camera.x + 150 * DT
+        self.scene.camera.x = self.scene.camera.x + 150 * DT
     end
     if love.keyboard.isDown("up") then
-        self.camera.y = self.camera.y - 150 * DT
+        self.scene.camera.y = self.scene.camera.y - 150 * DT
     end
     if love.keyboard.isDown("down") then
-        self.camera.y = self.camera.y + 150 * DT
+        self.scene.camera.y = self.scene.camera.y + 150 * DT
     end 
 end
 
@@ -68,7 +58,7 @@ end
 -- Gamestate Draw
 --
 function public:draw()   
-    self.camera:attach()
+    self.scene.camera:attach()
     
     -- Draw the ship principle grid position
     self:drawShipPrincipleGridPosition()  
@@ -80,9 +70,9 @@ function public:draw()
         end
     end
     
-    self.camera:detach()  
+    self.scene.camera:detach()  
     
-    local gpx, gpy = self.ship:getGridPosition(self.camera:worldCoords(love.mouse.getX(), love.mouse.getY()))    
+    local gpx, gpy = self.ship:getGridPosition(self.scene.camera:worldCoords(love.mouse.getX(), love.mouse.getY()))    
     love.graphics.print(gpx..":"..gpy, love.mouse.getX()+10, love.mouse.getY()+20)
     local gcx, gcy = self.ship:getGridCoordinates(gpx, gpy)
     love.graphics.print(gcx..":"..gcy, love.mouse.getX()+10, love.mouse.getY()+35)
@@ -117,14 +107,14 @@ end
 --
 function public:mousepressed(X, T, BUTTON)
    if BUTTON == 'wu' then
-        if self.camera.scale < 6 then
-            self.camera.scale = self.camera.scale + 0.2
+        if self.scene.camera.scale < 6 then
+            self.scene.camera.scale = self.scene.camera.scale + 0.2
         end
    end
    
     if BUTTON == 'wd' then
-        if self.camera.scale > .4 then
-            self.camera.scale = self.camera.scale - 0.2
+        if self.scene.camera.scale > .4 then
+            self.scene.camera.scale = self.scene.camera.scale - 0.2
         end    
     end
 end

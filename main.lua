@@ -1,19 +1,21 @@
-game      = require('game.init')
+require('game.lib.loveconsole')
+--require('game.lib.lovedebug.lovedebug')
+--print(getmetatable(love))
+
+-- Load our game 
+game = require('game.init')
+
+-- Store the active runtime
 runtime   = nil
 
 --
 -- Called upon love2d startup, after boostrap & config
 --
-function love.load()  -- Load appropriate game runtime
-    game.lib.lovebird.wrapprint = true
-    
-    if ARGS["SERVER"] == true then
-        print("Starting Lacuna Server")
-        runtime = game.runtime.Server()
-        game.lib.lovebird.port = 8001        
+function love.load()
+    if ARGS["SERVER"] == true then        
+        runtime = game.runtime.Server()        
     else
-        runtime = game.runtime.Client()
-        game.lib.lovebird.port = 8000        
+        runtime = game.runtime.Client()        
     end    
     
     runtime:load()
@@ -22,8 +24,7 @@ end
 --
 -- Main Love2d update loop
 --
-function love.update(DT)
-    --game.lib.lovebird.update(DT)
+function love.update(DT)    
     runtime:update(DT)
 end
 

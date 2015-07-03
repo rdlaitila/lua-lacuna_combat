@@ -82,12 +82,18 @@ end
 -- Update
 --
 function public:update(DT)
+    for a=1, self.childNodes.length do
+        self.childNodes[a]:update(DT)
+    end
 end
 
 --
 -- Draw
 --
 function public:draw()
+    for a=1, self.childNodes.length do
+        self.childNodes[a]:draw()
+    end
 end
 
 --

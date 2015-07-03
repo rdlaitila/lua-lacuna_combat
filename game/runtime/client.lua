@@ -40,10 +40,12 @@ property : gamestates {
 --
 function private:__construct()    
     self.gamestates = {
-        clientMenu          = game.states.ClientMenu();
-        clientLobby         = game.states.ClientLobby();
-        clientShipBuilder   = game.states.ClientShipBuilder();
+        clientMenu              = game.states.ClientMenu();
+        clientLobby             = game.states.ClientLobby();
+        clientShipBuilder       = game.states.ClientShipBuilder();
+        clientShipPlayground    = game.states.ClientShipPlayground();
     }
+    
     self.networkManager = game.classes.NetworkManager()    
     self.gamestateManager = game.classes.GamestateManager()    
 end
